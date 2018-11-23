@@ -57,7 +57,7 @@ window.renderStatistics = function (ctx, names, times) {
 
   // drawing all bars
   names.forEach(function (name, index) {
-    var color = 'hsla(216, '+ Math.floor(Math.random() * 100) + '%, 50%, 1)';
+    var color = 'hsla(216, ' + Math.floor(Math.random() * 100) + '%, 50%, 1)';
     if (name === 'Вы') {
       color = '#ff0000';
     }
