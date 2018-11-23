@@ -461,17 +461,10 @@ window.Game = (function () {
           break;
         case Verdict.INTRO:
           message = 'Добро пожаловать!\nНажмите Пробел для начала игры';
-          // TODO: remove this after test
-          var statistics = this._generateStatistics(new Date() - this.state.startTime);
-          var keys = this._shuffleArray(Object.keys(statistics));
-          window.renderStatistics(this.ctx, keys, keys.map(function (it) {
-            return statistics[it];
-          }));
           break;
       }
 
-      // TODO: uncomment this after test
-      // this._drawMessage(message);
+      this._drawMessage(message);
     },
 
     _generateStatistics: function (time) {
