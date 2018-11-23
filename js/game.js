@@ -462,7 +462,11 @@ window.Game = (function () {
         case Verdict.INTRO:
           message = 'Добро пожаловать!\nНажмите Пробел для начала игры';
           // TODO: remove this after test
-          window.renderStatistics(this.ctx);
+          var statistics = this._generateStatistics(new Date() - this.state.startTime);
+          var keys = this._shuffleArray(Object.keys(statistics));
+          window.renderStatistics(this.ctx, keys, keys.map(function (it) {
+            return statistics[it];
+          }));
           break;
       }
 
