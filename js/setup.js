@@ -42,10 +42,23 @@ var MOCKUP_PRESETS = {
     'blue',
     'yellow',
     'green'
+  ],
+  fireballColors: [
+    '#ee4830',
+    '#30a8ee',
+    '#5ce6c0',
+    '#e848d5',
+    '#e6e848'
   ]
 };
 
 var WIZARDS_COUNT = 4;
+
+/**
+ * Keycodes
+ */
+var KEY_ENTER = 13;
+var KEY_ESCAPE = 27;
 
 
 /**
@@ -57,20 +70,12 @@ var WIZARDS_COUNT = 4;
 var pullRandomElement = function (array) {
   if (array.length) {
     var randomIndex = Math.floor(Math.random() * array.length);
-    return array.splice(randomIndex, 1)[0];
+    return array[randomIndex];
   } else {
     return null;
   }
 };
 
-
-/**
- *  Showing setup window
- */
-var showSetup = function () {
-  var setupBlock = document.querySelector('.setup');
-  setupBlock.classList.remove('hidden');
-};
 
 /**
  * @typedef {Object} Wizard
@@ -152,9 +157,149 @@ var showSetupSimilar = function () {
 };
 
 // executing setup flow
-showSetup();
+// showSetup();
 var randomWizards = generateWizardArray(WIZARDS_COUNT);
 var wizardsFragment = renderWizardsFragment(randomWizards);
 var similarListElement = document.querySelector('.setup-similar-list');
 similarListElement.appendChild(wizardsFragment);
 showSetupSimilar();
+
+/**
+ * Module 4 Task 1
+ */
+
+/**
+ * Showing setup window
+ */
+var showSetup = function () {
+  var setupBlock = document.querySelector('.setup');
+  setupBlock.classList.remove('hidden');
+};
+
+/**
+ * Hiding setup window
+ */
+var hideSetup = function () {
+  var setupBlock = document.querySelector('.setup');
+  setupBlock.classList.add('hidden');
+};
+
+/**
+ * Handling user icon click
+ */
+var setupOpenBtn = document.querySelector('.setup-open');
+setupOpenBtn.addEventListener('click', function () {
+  showSetup();
+});
+
+/**
+ * Handling setup window cross click
+ */
+var setupCloseBtn = document.querySelector('.setup-close');
+setupCloseBtn.addEventListener('click', function () {
+  hideSetup();
+});
+
+/**
+ * Handling keyboard :)
+ */
+var setupOpenIcon = document.querySelector('.setup-open-icon');
+var setupUserNameInput = document.querySelector('.setup-user-name');
+document.addEventListener('keydown', function (e) {
+  switch (e.keyCode) {
+    case (KEY_ENTER):
+      if (document.activeElement === setupOpenIcon) {
+        showSetup();
+      } else if (document.activeElement === setupCloseBtn) {
+        hideSetup();
+      }
+      break;
+    case (KEY_ESCAPE):
+      if (document.activeElement !== setupUserNameInput) {
+        hideSetup();
+      }
+      break;
+  }
+});
+
+
+/**
+ * Validating form input
+ */
+setupUserNameInput.addEventListener('invalid', function () {
+  if (setupUserNameInput.validity.tooShort) {
+    setupUserNameInput.setCustomValidity('Минимальная длина имени персонажа — 2 символа');
+  } else if (setupUserNameInput.validity.tooLong) {
+    setupUserNameInput.setCustomValidity('Максимальная длина имени персонажа — 25 символов');
+  } else if (setupUserNameInput.validity.valueMissing) {
+    setupUserNameInput.setCustomValidity('Необходимо ввести имя персонажа');
+  } else {
+    setupUserNameInput.setCustomValidity('');
+  }
+});
+
+setupUserNameInput.addEventListener('input', function (e) {
+  var target = e.target;
+  if (target.value.length < 2) {
+    setupUserNameInput.setCustomValidity('Минимальная длина имени персонажа — 2 символа');
+  } else {
+    setupUserNameInput.setCustomValidity('');
+  }
+});
+
+
+/**
+ * Generating a function which returns one element of an array
+ * one by one in repeating sequence
+ * @param {Array} array
+ * @return {Function}
+ */
+var generateRotation = function (array) {
+  var clonedArray = array.slice(0);
+  var index = 1;
+
+  return function () {
+    var element = clonedArray[index];
+    index++;
+    if (index === clonedArray.length) {
+      index = 0;
+    }
+    return element;
+  };
+};
+
+/**
+ * Changing coat color on click
+ */
+var rotateCoatColor = generateRotation(MOCKUP_PRESETS.coatColors);
+var heroWizardCoat = document.querySelector('.setup-wizard .wizard-coat');
+var coatInput = document.querySelector('input[name="coat-color"]');
+heroWizardCoat.addEventListener('click', function () {
+  var newCoatColor = rotateCoatColor();
+  heroWizardCoat.style.fill = newCoatColor;
+  coatInput.value = newCoatColor;
+});
+
+/**
+ * Changing eyes color on click
+ */
+var rotateEyesColor = generateRotation(MOCKUP_PRESETS.eyesColors);
+var heroWizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
+var eyesInput = document.querySelector('input[name="eyes-color"]');
+heroWizardEyes.addEventListener('click', function () {
+  var newEyesColor = rotateEyesColor();
+  heroWizardEyes.style.fill = newEyesColor;
+  eyesInput.value = newEyesColor;
+});
+
+/**
+ * Changing fireball color on click
+ */
+var rotateFireballColor = generateRotation(MOCKUP_PRESETS.fireballColors);
+var heroWizardFireball = document.querySelector('.setup-fireball-wrap');
+var fireballInput = document.querySelector('input[name="fireball-color"]');
+heroWizardFireball.addEventListener('click', function () {
+  var newFireballColor = rotateFireballColor();
+  heroWizardFireball.style.backgroundColor = newFireballColor;
+  fireballInput.value = newFireballColor;
+});
