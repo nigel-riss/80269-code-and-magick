@@ -165,14 +165,13 @@ similarListElement.appendChild(wizardsFragment);
 showSetupSimilar();
 
 /**
- * Module 4 Task 1
- */
-
-/**
  * Showing setup window
  */
 var showSetup = function () {
   var setupBlock = document.querySelector('.setup');
+  setupBlock.style.top = '80px';
+  setupBlock.style.left = '50%';
+  setupBlock.style.transform = 'translateX(-50%)';
   setupBlock.classList.remove('hidden');
 };
 
