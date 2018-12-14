@@ -1,60 +1,79 @@
 'use strict';
 
-var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
+(function (windowClass, handleClass) {
+  var setup = document.querySelector(windowClass);
 
-// var handle = document.querySelector('.setup-user-pic');
-var handle = document.querySelector('.upload');
-var startCoords = {x: null, y: null};
-var shift = {x: null, y: null};
-var isDragged = false;
+  var handle = document.querySelector(handleClass);
+  var startCoords = {};
+  var shift = {};
+  var isDragged = false;
 
-var onMouseDown = function (evt) {
-  evt.preventDefault();
+  /**
+   * Mouse down event handler
+   * @param {MouseEvent} evt
+   */
+  var onMouseDown = function (evt) {
+    evt.preventDefault();
 
-  startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-};
 
-var onMouseMove = function (evt) {
-  evt.preventDefault();
+  /**
+   * Mouse move event handler
+   * @param {MouseEvent} evt
+   */
+  var onMouseMove = function (evt) {
+    evt.preventDefault();
 
-  isDragged = true;
+    isDragged = true;
 
-  shift = {
-    x: startCoords.x - evt.clientX,
-    y: startCoords.y - evt.clientY
+    shift = {
+      x: startCoords.x - evt.clientX,
+      y: startCoords.y - evt.clientY
+    };
+
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    setup.style.top = (setup.offsetTop - shift.y) + 'px';
+    setup.style.left = (setup.offsetLeft - shift.x) + 'px';
   };
 
-  startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
+
+  /**
+   * Mouse up event handler
+   * @param {MouseEvent} evt
+   */
+  var onMouseUp = function (evt) {
+    evt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (isDragged) {
+      handle.addEventListener('click', onClickPreventDefault);
+      isDragged = false;
+    }
   };
 
-  setup.style.top = (setup.offsetTop - shift.y) + 'px';
-  setup.style.left = (setup.offsetLeft - shift.x) + 'px';
-};
 
-var onMouseUp = function (evt) {
-  evt.preventDefault();
+  /**
+   * Click event handler to prevent default input behavior
+   * @param {MouseEvent} evt
+   */
+  var onClickPreventDefault = function (evt) {
+    evt.preventDefault();
+    handle.removeEventListener('click', onClickPreventDefault);
+  };
 
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
-
-  if (isDragged) {
-    handle.addEventListener('click', onClickPreventDefault);
-    isDragged = false;
-  }
-};
-
-var onClickPreventDefault = function (evt) {
-  evt.preventDefault();
-  handle.removeEventListener('click', onClickPreventDefault);
-};
-
-handle.addEventListener('mousedown', onMouseDown);
+  handle.addEventListener('mousedown', onMouseDown);
+})('.setup', '.upload');
