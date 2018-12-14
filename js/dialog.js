@@ -1,12 +1,15 @@
 'use strict';
 
+/**
+ * Handles 'window' movement (drag-n-drop)
+ */
 (function (windowClass, handleClass) {
   var setup = document.querySelector(windowClass);
-
   var handle = document.querySelector(handleClass);
   var startCoords = {};
   var shift = {};
   var isDragged = false;
+
 
   /**
    * Mouse down event handler
@@ -74,6 +77,7 @@
     evt.preventDefault();
     handle.removeEventListener('click', onClickPreventDefault);
   };
+
 
   handle.addEventListener('mousedown', onMouseDown);
 })('.setup', '.upload');

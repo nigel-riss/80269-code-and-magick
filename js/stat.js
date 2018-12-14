@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Game over statistics drawing
+ */
 (function () {
   var MAX_HEIGHT = 140;
   var TOP_OFFSET = 100;
@@ -30,7 +33,7 @@
    * @param {number} score score
    * @param {number} maxScore maximum score
    * @param {string} playerName players name
-   * @param {string} fillColor css color of rectangl
+   * @param {string} fillColor css color of rectangle
    */
   var drawBar = function (context, barNum, score, maxScore, playerName, fillColor) {
     var barHeight = Math.round(MAX_HEIGHT * (score / maxScore));
